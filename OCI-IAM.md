@@ -126,11 +126,15 @@ Allow group DR-Admins to manage identity-domains in region US-West
 ```
 
 # 5. Common Mistakes & Fixes
-**Mistake** ________________**Risk** _____	**Fix**
-Overlybroad------------------policies	Hackers can delete resources.	Use read instead of manage.
-No MFA-----------------------Easy password theft.	Enforce MFA for all users.
-Ignoring compartments--------Chaos in resource management.	Organize by team/project.
-Forgetting dynamic groups----Manual access updates.	Use tags/rules for automation.
+**Mistake** _____________________**Risk** ______________________________________**Fix**
+
+Overlybroad------------------policies Hackers can delete resources.------Use read instead of manage.
+
+No MFA-----------------------Easy password theft.------------------------Enforce MFA for all users.
+
+Ignoring compartments--------Chaos in resource management.---------------Organize by team/project.
+
+Forgetting dynamic groups----Manual access updates.----------------------Use tags/rules for automation.
 
 # 6. Advanced Best Practices
 Tag Everything: Use tags like Env=Prod or Owner=Alice for policies.
