@@ -2,21 +2,20 @@ Here’s a complete, simplified guide to OCI Identity and Access Management (IAM
 
 # 1. Basic Concepts
 ## a. What is IAM?
-- IAM is like a security manager for your Oracle Cloud account.
 - IAM is like a security guard for your Oracle Cloud account. It decides who can enter (users), what they can access (resources), and what they can do (actions).
-It controls:
-* Who can access resources (users/groups).
-* What they can do (permissions).
-* Where they can do it (compartments).
+- It controls:
+  * Who can access resources (users/groups).
+  * What they can do (permissions).
+  * Where they can do it (compartments).
 
 ## b. Core Components
 * Users: People or systems (e.g., "john@company.com" or "BackupBot").
 * Groups: Teams of users (e.g., "Developers" or "Auditors").
 * Compartments: Folders to organize resources (e.g., "Finance" or "Dev-Projects").
-  * Example: Create a compartment named "Finance" to store all finance-related resources.
+  * **Example:** Create a compartment named "Finance" to store all finance-related resources.
 * Policies: Rules that grant permissions (e.g., "Developers can manage servers in Dev-Projects").
 * Dynamic Group: A group of resources (not people) that follow a rule.
-  * Example: "All servers tagged as ‘Backup’ can read storage buckets."
+  * **Example:** "All servers tagged as ‘Backup’ can read storage buckets."
 
 ## c. Example Policy
 ```
