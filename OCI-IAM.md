@@ -68,89 +68,71 @@ WHERE request.source.ip IN [192.158.1.0/24]
 ## a. Privileged Access Management (PAM)
 - What: Super-secure access for admins.
 - How:
-
-Require approval before using admin rights.
-
-Limit admin sessions to 1 hour.
-
-Log all admin actions.
+  - Require approval before using admin rights.
+  - Limit admin sessions to 1 hour.
+  - Log all admin actions.
 
 ## b. Zero Trust Architecture
-Rule: "Never trust, always verify."
+- Rule: "Never trust, always verify."
+- Implementation:
+  - Check user location, device, and time of access.
+  - Block access if suspicious (e.g., login from a new country).
 
-Implementation:
+## c. Identity Federation
+- What: Let users log in with external accounts (e.g., Microsoft, Google).
+- Steps:
+  1. Link Oracle Cloud to your company’s Microsoft/Google account.
+  2. Users sign in with their existing email/password.
+  3. Apply OCI policies to federated users.
 
-Check user location, device, and time of access.
+## d. Cross-Compartment Access
+- Scenario: Let a user in compartment "HR" access a database in "Finance".
+- Policy:
+```
+Allow group HR-Admins to read databases in compartment Finance
+```
+- Best Practice: Use tags to avoid over-permission.
 
-Block access if suspicious (e.g., login from a new country).
-
-c. Identity Federation
-What: Let users log in with external accounts (e.g., Microsoft, Google).
-
-Steps:
-
-Link Oracle Cloud to your company’s Microsoft/Google account.
-
-Users sign in with their existing email/password.
-
-Apply OCI policies to federated users.
-
-d. Cross-Compartment Access
-Scenario: Let a user in compartment "HR" access a database in "Finance".
-
-Policy:
-
-plaintext
-Copy
-Allow group HR-Admins to read databases in compartment Finance  
-Best Practice: Use tags to avoid over-permission.
-
-e. Automation with Terraform
-Example: Automate user/group creation:
-
+## e. Automation with Terraform
+- Example: Automate user/group creation:
 terraform
-Copy
+```
 resource "oci_identity_user" "dev_user" {
   name = "alice@company.com"
   description = "Developer User"
 }
-4. Real-World Scenarios
-a. Multi-Tenant Setup
-Goal: Isolate resources for different clients.
+```
 
-Steps:
-
-Create compartments: Client-A, Client-B.
-
-Create groups: ClientA-Admins, ClientB-Admins.
-
-Write policies:
-
-plaintext
-Copy
+# 4. Real-World Scenarios
+## a. Multi-Tenant Setup
+- Goal: Isolate resources for different clients.
+- Steps:
+  1. Create compartments: Client-A, Client-B.
+  2. Create groups: ClientA-Admins, ClientB-Admins.
+  3. Write policies:
+```
 Allow group ClientA-Admins to manage all-resources in compartment Client-A
-b. Auditing & Compliance
-Tools:
+```
+## b. Auditing & Compliance
+- Tools:
+  - Audit Logs: Track who did what (e.g., "John deleted a server at 3 PM").
+  - OCI Compliance Reports: Pre-built reports for standards like PCI DSS.
 
-Audit Logs: Track who did what (e.g., "John deleted a server at 3 PM").
-
-OCI Compliance Reports: Pre-built reports for standards like PCI DSS.
-
-c. Disaster Recovery (DR)
-HA for Identity Domains: Replicate users/policies across regions.
-
-Policy Example:
-
-plaintext
-Copy
+## c. Disaster Recovery (DR)
+- HA for Identity Domains: Replicate users/policies across regions.
+- Policy Example:
+```
 Allow group DR-Admins to manage identity-domains in region US-West
-5. Common Mistakes & Fixes
-Mistake	Risk	Fix
-Overly broad policies	Hackers can delete resources.	Use read instead of manage.
-No MFA	Easy password theft.	Enforce MFA for all users.
-Ignoring compartments	Chaos in resource management.	Organize by team/project.
-Forgetting dynamic groups	Manual access updates.	Use tags/rules for automation.
-6. Advanced Best Practices
+```
+
+# 5. Common Mistakes & Fixes
+**Mistake** ________________**Risk** _____	**Fix**
+Overlybroad------------------policies	Hackers can delete resources.	Use read instead of manage.
+No MFA-----------------------Easy password theft.	Enforce MFA for all users.
+Ignoring compartments--------Chaos in resource management.	Organize by team/project.
+Forgetting dynamic groups----Manual access updates.	Use tags/rules for automation.
+
+# 6. Advanced Best Practices
 Tag Everything: Use tags like Env=Prod or Owner=Alice for policies.
 
 Least Privilege: Start with read access; upgrade only if needed.
