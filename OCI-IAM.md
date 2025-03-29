@@ -9,12 +9,12 @@ Here’s a complete, simplified guide to OCI Identity and Access Management (IAM
   * Where they can do it (compartments).
 
 ## b. Core Components
-* Users: People or systems (e.g., "john@company.com" or "BackupBot").
-* Groups: Teams of users (e.g., "Developers" or "Auditors").
-* Compartments: Folders to organize resources (e.g., "Finance" or "Dev-Projects").
+* **Users:** People or systems (e.g., "john@company.com" or "BackupBot").
+* **Groups:** Teams of users (e.g., "Developers" or "Auditors").
+* **Compartments:** Folders to organize resources (e.g., "Finance" or "Dev-Projects").
   * **Example:** Create a compartment named "Finance" to store all finance-related resources.
-* Policies: Rules that grant permissions (e.g., "Developers can manage servers in Dev-Projects").
-* Dynamic Group: A group of resources (not people) that follow a rule.
+* **Policies:** Rules that grant permissions (e.g., "Developers can manage servers in Dev-Projects").
+* **Dynamic Group:** A group of resources (not people) that follow a rule.
   * **Example:** "All servers tagged as ‘Backup’ can read storage buckets."
 
 ## c. Example Policy
