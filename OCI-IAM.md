@@ -126,11 +126,11 @@ Allow group DR-Admins to manage identity-domains in region US-West
 ```
 
 # 5. Common Mistakes & Fixes
-**Mistake** _____________________**Risk** ______________________________________**Fix**
+**Mistake** _______________________**Risk** ______________________________________**Fix**
 
-Overlybroad------------------policies Hackers can delete resources.------Use read instead of manage.
+Overlybroad--------------------policies Hackers can delete resources.------Use read instead of manage.
 
-No MFA-----------------------Easy password theft.------------------------Enforce MFA for all users.
+No MFA-------------------------Easy password theft.------------------------Enforce MFA for all users.
 
 Ignoring compartments--------Chaos in resource management.---------------Organize by team/project.
 
