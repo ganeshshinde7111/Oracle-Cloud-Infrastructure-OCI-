@@ -151,8 +151,9 @@ Forgetting dynamic groups----Manual access updates.---------------------Use tags
 - Basic: Users, groups, compartments, simple policies.
 - Intermediate: Dynamic groups, identity domains, network sources.
 - Advanced: Zero Trust, PAM, federation, cross-compartment automation.
-
-
+.
+.
+.
 ### Here’s a hands-on guide with practical examples for OCI Identity and Access Management (IAM), using simple steps and commands:
 
 # 1. Basic User & Group Setup
