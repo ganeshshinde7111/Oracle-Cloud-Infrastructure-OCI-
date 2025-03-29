@@ -292,9 +292,13 @@ oci iam policy create \
 
 # 7. Troubleshooting Common Issues
 ### Issue_________________________Solution
+
 **Permission Denied**------------	Check policy verbs (read vs. manage).
+
 **Dynamic Group Not Working**----	Verify instance tags match the rule.
+
 **SSO Login Fails**--------------	Check SAML claims mapping in Azure AD/Okta.
+
 **Cross-Compartment Access**-----	Ensure policies exist in the root or target compartment.
 
 # 8. Key Takeaways
