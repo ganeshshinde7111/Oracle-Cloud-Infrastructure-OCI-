@@ -31,12 +31,13 @@ Allow group Developers to manage compute-instances in compartment Dev-Projects
 
 # 2. Intermediate Concepts
 ## a. Policy Verbs
-**Verb**	      **What It Allows**	                    **Example Use Case**
-**inspect**	    View details (read-only).	          Check server names, IPs.
-**read**	      View/download data.	                Read files in storage.
-**use**	        Use but not modify.	                Start/stop a server.
-**manage**	    Full control (create,delete,edit).	Create a new database.
-
+```
+Verb	      What It Allows	                      Example Use Case
+inspect	   View details (read-only).	          Check server names, IPs.
+read        View/download data.	                Read files in storage.
+use	      Use but not modify.	                Start/stop a server.
+manage	   Full control (create,delete,edit).	 Create a new database.
+```
 ## b. Dynamic Groups
 - What: Groups of resources (not people) that follow rules.
 - Example Rule:
