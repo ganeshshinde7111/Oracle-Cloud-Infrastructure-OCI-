@@ -19,7 +19,7 @@ IAM is like a security manager for your Oracle Cloud account. It controls:
 ## c. Example Policy
 plaintext
 Copy
-Allow group Developers to manage compute-instances in compartment Dev-Projects
+```Allow group Developers to manage compute-instances in compartment Dev-Projects```
 
 - Allow: Action (grant access).
 - group Developers: Who gets access.
