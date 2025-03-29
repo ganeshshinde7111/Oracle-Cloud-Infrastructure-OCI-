@@ -1,11 +1,9 @@
 Here’s a complete, simplified guide to OCI Identity and Access Management (IAM) – from basic concepts to advanced strategies – organized for clarity and easy understanding:
 
 # 1. Basic Concepts
-(For Beginners)
-
 ## a. What is IAM?
-IAM is like a security manager for your Oracle Cloud account. It controls:
-
+IAM is like a security manager for your Oracle Cloud account. 
+It controls:
 * Who can access resources (users/groups).
 * What they can do (permissions).
 * Where they can do it (compartments).
@@ -17,7 +15,6 @@ IAM is like a security manager for your Oracle Cloud account. It controls:
 * Policies: Rules that grant permissions (e.g., "Developers can manage servers in Dev-Projects").
 
 ## c. Example Policy
-
 ```
 Allow group Developers to manage compute-instances in compartment Dev-Projects
 ```
@@ -29,59 +26,47 @@ Allow group Developers to manage compute-instances in compartment Dev-Projects
 - **Dev-Projects:** Where (compartment).
 
 ## d. Basic Security
-MFA (Multi-Factor Authentication): Require a password + a code from your phone.
-
-Password Policies: Force users to create strong passwords (e.g., 12 characters).
+- **MFA (Multi-Factor Authentication):** Require a password + a code from your phone.
+- **Password Policies:** Force users to create strong passwords (e.g., 12 characters).
 
 # 2. Intermediate Concepts
-(For Engineers/Admins)
-
 ## a. Policy Verbs
-Verb	What It Allows	Example Use Case
-inspect	View details (read-only).	Check server names, IPs.
-read	View/download data.	Read files in storage.
-use	Use but not modify.	Start/stop a server.
-manage	Full control (create, delete, edit).	Create a new database.
-b. Dynamic Groups
-What: Groups of resources (not people) that follow rules.
+  **Verb**	      **What It Allows**	                    **Example Use Case**
+  **inspect**	    View details (read-only).	          Check server names, IPs.
+  **read**	      View/download data.	                Read files in storage.
+  **use**	        Use but not modify.	                Start/stop a server.
+  **manage**	    Full control (create,delete,edit).	Create a new database.
 
-Example Rule:
-
-plaintext
-Copy
+## b. Dynamic Groups
+- What: Groups of resources (not people) that follow rules.
+- Example Rule:
+```
 All instances in compartment Dev-Projects with tag "Backup=true"
-Policy Example:
-
-plaintext
-Copy
+```
+- Policy Example:
+```
 Allow dynamic-group BackupServers to read buckets in compartment Backups
-c. Identity Domains
-What: A container for managing users, passwords, and security settings.
+```
+## c. Identity Domains
+- What: A container for managing users, passwords, and security settings.
+- ### Features:
+   - SSO (Single Sign-On) with Google/Microsoft accounts.
+   - Custom password rules (e.g., "Passwords expire every 90 days").
+   - MFA enforcement.
 
-Features:
-
-SSO (Single Sign-On) with Google/Microsoft accounts.
-
-Custom password rules (e.g., "Passwords expire every 90 days").
-
-MFA enforcement.
-
-d. Network Sources
+## d. Network Sources
 Restrict access by IP addresses:
-
-plaintext
-Copy
+```
 Allow group RemoteAdmins to manage all-resources  
 WHERE request.source.ip IN [192.158.1.0/24]
+```
 (Only allows access from the office IP range)
 
-3. Advanced Concepts
-(For Architects/Security Experts)
+# 3. Advanced Concepts
 
-a. Privileged Access Management (PAM)
-What: Super-secure access for admins.
-
-How:
+## a. Privileged Access Management (PAM)
+- What: Super-secure access for admins.
+- How:
 
 Require approval before using admin rights.
 
@@ -89,7 +74,7 @@ Limit admin sessions to 1 hour.
 
 Log all admin actions.
 
-b. Zero Trust Architecture
+## b. Zero Trust Architecture
 Rule: "Never trust, always verify."
 
 Implementation:
