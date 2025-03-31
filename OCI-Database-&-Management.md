@@ -227,3 +227,98 @@ OCI allows user and role-based access control.
 
 ## **Conclusion**
 OCI provides a comprehensive set of tools for database creation, management, and optimization. Whether you're a beginner or an advanced user, mastering these tasks ensures high performance, security, and availability of your databases.
+
+---
+
+# Other Database related OCI Services 
+
+## 1. Connector Hub
+
+**Overview:**
+Connector Hub is a cloud message bus platform within OCI that enables seamless data movement between various OCI services and third-party applications. It provides a centralized interface for describing, executing, and monitoring data transfers. citeturn0search3
+
+**Key Features:**
+- **Centralized Management:** Monitor and manage all data movements from a single interface.
+- **Data Integration:** Facilitates integration between services like Logging, Object Storage, Streaming, Logging Analytics, and Monitoring.
+- **Event-Driven Processing:** Triggers Functions for data processing and Notifications for alerts based on specific events.
+- **Third-Party Integration:** Supports integration with Kafka-compatible Streaming services, allowing seamless data transfer to external tools.
+
+**Configuration Steps:**
+1. **Access the OCI Console:**
+   - Log in to your OCI account.
+   - Navigate to **Connector Hub** under the **Application Integration** section.
+2. **Create a Connector:**
+   - Click on **Create Connector**.
+   - Provide a **Name** and **Description** for the connector.
+   - Select the **Source Service** (e.g., Logging).
+   - Define the **Target Service** (e.g., Object Storage).
+3. **Set Up Filters (Optional):**
+   - Specify conditions to filter the data being transferred.
+4. **Configure Tasks:**
+   - Add tasks such as invoking a Function or sending a Notification.
+5. **Review and Create:**
+   - Review the configuration settings.
+   - Click **Create Connector** to initiate the data movement setup.
+
+## 2. Data Catalog
+
+**Overview:**
+Data Catalog is an OCI service that offers a centralized metadata management solution, enabling users to discover, organize, and govern data assets across the enterprise.
+
+**Key Features:**
+- **Automated Metadata Harvesting:** Automatically collects metadata from various data sources.
+- **Search and Discovery:** Provides a robust search interface to locate data assets quickly.
+- **Data Governance:** Supports data classification, tagging, and lineage tracking to ensure compliance and data quality.
+
+**Configuration Steps:**
+1. **Access the OCI Console:**
+   - Log in to your OCI account.
+   - Navigate to **Data Catalog** under the **Analytics & AI** section.
+2. **Create a Catalog:**
+   - Click on **Create Catalog**.
+   - Provide a **Name** and **Description**.
+   - Select the **Compartment** where the catalog will reside.
+3. **Register Data Assets:**
+   - Within the catalog, register data assets by specifying the data source type (e.g., Object Storage, Autonomous Database).
+   - Provide connection details and credentials as required.
+4. **Harvest Metadata:**
+   - Initiate metadata harvesting to populate the catalog with metadata from the registered data assets.
+5. **Organize and Govern:**
+   - Use tags, classifications, and glossary terms to organize and govern the data assets effectively.
+
+## 3. Data Flow
+
+**Overview:**
+Data Flow is a fully managed Apache Spark service on OCI that allows users to run Spark applications without the need to manage infrastructure. It is designed for large-scale data processing tasks.
+
+**Key Features:**
+- **Serverless Spark:** Run Spark applications without provisioning or managing clusters.
+- **Scalability:** Automatically scales resources based on the workload.
+- **Integrated Monitoring:** Provides logs and metrics for monitoring and debugging applications.
+
+**Configuration Steps:**
+1. **Access the OCI Console:**
+   - Log in to your OCI account.
+   - Navigate to **Data Flow** under the **Analytics & AI** section.
+2. **Create an Application:**
+   - Click on **Create Application**.
+   - Provide a **Name**, **Description**, and select the **Compartment**.
+   - Specify the **Spark Application File** (e.g., a JAR file stored in Object Storage).
+   - Define **Application Parameters**, **Driver Shape**, and **Executor Shape**.
+3. **Set Up Logging:**
+   - Configure logging by specifying a **Log Group** and **Log Object**.
+4. **Review and Run:**
+   - Review the application configuration.
+   - Click **Create** and then **Run** to execute the Spark application.
+
+## 4. Data Safe
+
+**Overview:**
+Oracle Data Safe is a fully integrated cloud service that enhances the security of your data in Oracle Cloud databases. It offers features for security assessments, user assessments, data discovery, data masking, activity auditing, alerts, and SQL firewall capabilities. citeturn0search5
+
+**Key Features:**
+- **Security Assessment:** Evaluates database configurations against security best practices.
+- **User Assessment:** Analyzes user accounts and their entitlements to identify security risks.
+- **Data Discovery and Masking:** Identifies sensitive data and applies masking to protect it.
+- **Activity Auditing:** Monitors and audits database activities to detect anomalous behavior.
+- **Alerts and SQL Firewall:** 
