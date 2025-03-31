@@ -106,6 +106,9 @@ These ports are dynamically allocated for **cloud, VPNs, and temporary connectio
 - **1024-49151** → **Registered Ports** (Cloud, DevOps, Databases, Monitoring, CI/CD)  
 - **49152-65535** → **Dynamic/Private Ports** (Cloud applications, VPNs, Custom APIs)  
 
+---
+---
+---
 
 # PART: 2
 
