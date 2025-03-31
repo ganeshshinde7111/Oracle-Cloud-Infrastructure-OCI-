@@ -260,7 +260,8 @@ oci iam policy create \
 - Click Enable MFA.
 - Choose Email or Authenticator App (e.g., Google Authenticator).
 
-# 4. Federation with Azure AD
+# 4. Federation 
+## 4.1 Federation with Azure AD
 ### Goal: Let users log in with Azure AD accounts.
 
 ***Steps:***
@@ -273,6 +274,21 @@ oci iam policy create \
 - In OCI:
   - Upload Azure AD metadata (XML).
   - Test SSO.
+
+## 4.2 Federation with CyberArk  
+### Goal: Let users log in with CyberArk accounts.  
+
+***Steps:***  
+- Go to **Identity & Security** → **Identity Domains** → **Create Domain**.  
+- **Name**: CyberArk-Federation, **Type**: External Identity Provider.  
+- Download the **Service Provider Metadata** (XML file).  
+- In **CyberArk**:  
+  - Navigate to **Identity Administration** → **Web Apps** → **Add Web App**.  
+  - Choose **SAML Authentication** and upload the **Oracle metadata**.  
+  - Configure **SAML claims** (map CyberArk attributes to OCI).  
+- In **OCI**:  
+  - Upload **CyberArk metadata** (XML).  
+  - Test **SSO**.
 
 # 5. Advanced: Cross-Compartment Access
 ### Goal: Let users in HR compartment read databases in Finance.
