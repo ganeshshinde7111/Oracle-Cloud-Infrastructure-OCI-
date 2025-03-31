@@ -383,3 +383,394 @@ VPC Flow Logs record network traffic, helping troubleshoot connectivity issues.
 
 ## **Conclusion**
 OCI offers a robust networking stack with multiple connectivity, security, and edge solutions for enterprises of all sizes. Understanding these services enables architects and engineers to build **scalable, secure, and high-performance** cloud environments.
+
+---
+---
+
+# Gateways 
+
+---
+
+# **1. Internet Gateway (IG)**  
+An **Internet Gateway (IG)** allows **inbound and outbound** internet communication for instances with **public IPs** in a **public subnet**.
+
+### **Use Cases:**
+- Hosting public-facing applications (e.g., websites, APIs).
+- Allowing cloud servers to access external services over the internet.
+
+### **Key Points:**
+- Each **VCN** can have **only one** Internet Gateway.
+- The **subnet must be public**, and instances **must have public IPs**.
+- Security rules **must allow inbound/outbound traffic**.
+
+---
+
+### **Configuration: Internet Gateway**
+#### **Using OCI Console**
+1. **Go to OCI Console** → Navigate to **Networking** → Select **VCN**.
+2. Click **Internet Gateways** → **Create Internet Gateway**.
+3. Provide a **Name** and select the **Compartment**.
+4. Click **Create Internet Gateway**.
+5. Update the **VCN Route Table**:
+   - Add a rule: `0.0.0.0/0` → **Internet Gateway**.
+6. **Update Security List** to allow inbound/outbound traffic.
+
+#### **Using OCI CLI**
+```sh
+# Create Internet Gateway
+oci network internet-gateway create --compartment-id <COMPARTMENT_OCID> --vcn-id <VCN_OCID> --display-name "MyIG" --is-enabled true
+
+# Update Route Table
+oci network route-table update --rt-id <ROUTE_TABLE_OCID> --route-rules '[{"destination": "0.0.0.0/0", "destinationType": "CIDR_BLOCK", "networkEntityId": "<INTERNET_GATEWAY_OCID>"}]'
+```
+
+#### **Using Terraform**
+```hcl
+resource "oci_core_internet_gateway" "my_ig" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "MyIG"
+  enabled        = true
+}
+
+resource "oci_core_route_table" "internet_rt" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "InternetRT"
+  route_rules {
+    destination = "0.0.0.0/0"
+    network_entity_id = oci_core_internet_gateway.my_ig.id
+  }
+}
+```
+
+---
+
+# **2. NAT Gateway (NAT)**
+A **NAT Gateway** allows **private subnet instances** to initiate **outbound internet traffic** without exposing them to inbound internet access.
+
+### **Use Cases:**
+- Private instances accessing software updates.
+- API calls to external services without public exposure.
+
+### **Key Points:**
+- Each **VCN** can have **only one** NAT Gateway.
+- Only **outbound** traffic is allowed.
+- A **private subnet** must use the **NAT Gateway** in its **Route Table**.
+
+---
+
+### **Configuration: NAT Gateway**
+#### **Using OCI Console**
+1. **Go to OCI Console** → Navigate to **Networking** → Select **VCN**.
+2. Click **NAT Gateways** → **Create NAT Gateway**.
+3. Provide a **Name** and select the **Compartment**.
+4. Click **Create NAT Gateway**.
+5. Update the **VCN Route Table**:
+   - Add a rule: `0.0.0.0/0` → **NAT Gateway**.
+
+#### **Using OCI CLI**
+```sh
+# Create NAT Gateway
+oci network nat-gateway create --compartment-id <COMPARTMENT_OCID> --vcn-id <VCN_OCID> --display-name "MyNAT"
+
+# Update Route Table
+oci network route-table update --rt-id <ROUTE_TABLE_OCID> --route-rules '[{"destination": "0.0.0.0/0", "destinationType": "CIDR_BLOCK", "networkEntityId": "<NAT_GATEWAY_OCID>"}]'
+```
+
+#### **Using Terraform**
+```hcl
+resource "oci_core_nat_gateway" "my_nat" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "MyNAT"
+}
+
+resource "oci_core_route_table" "nat_rt" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "NatRT"
+  route_rules {
+    destination = "0.0.0.0/0"
+    network_entity_id = oci_core_nat_gateway.my_nat.id
+  }
+}
+```
+
+---
+
+# **3. Service Gateway (SG)**
+A **Service Gateway** allows private subnet instances to communicate **securely with Oracle services** (like **Object Storage**) **without using the internet**.
+
+### **Use Cases:**
+- Secure access to **OCI Object Storage, Autonomous Database**.
+- Traffic remains **within OCI’s private network**.
+
+### **Key Points:**
+- Works **only for specific Oracle services**.
+- Requires **route table updates**.
+
+---
+
+### **Configuration: Service Gateway**
+#### **Using OCI Console**
+1. **Go to OCI Console** → Navigate to **Networking** → Select **VCN**.
+2. Click **Service Gateways** → **Create Service Gateway**.
+3. Select **Compartment** and **Service Name** (e.g., `all-object-storage-services`).
+4. Click **Create Service Gateway**.
+5. Update the **Route Table**:
+   - Add a route to **Service Gateway**.
+
+#### **Using OCI CLI**
+```sh
+# Create Service Gateway
+oci network service-gateway create --compartment-id <COMPARTMENT_OCID> --vcn-id <VCN_OCID> --services '[{"service_id": "<SERVICE_ID>"}]'
+
+# Update Route Table
+oci network route-table update --rt-id <ROUTE_TABLE_OCID> --route-rules '[{"destination": "all-object-storage-services", "destinationType": "SERVICE_CIDR_BLOCK", "networkEntityId": "<SERVICE_GATEWAY_OCID>"}]'
+```
+
+#### **Using Terraform**
+```hcl
+resource "oci_core_service_gateway" "my_sg" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "MySG"
+  services {
+    service_id = "<SERVICE_ID>"
+  }
+}
+
+resource "oci_core_route_table" "service_rt" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "ServiceRT"
+  route_rules {
+    destination_type = "SERVICE_CIDR_BLOCK"
+    destination      = "all-object-storage-services"
+    network_entity_id = oci_core_service_gateway.my_sg.id
+  }
+}
+```
+
+---
+
+# **4. Dynamic Routing Gateway (DRG)**  
+A **Dynamic Routing Gateway (DRG)** connects **VCNs to on-premises networks, other VCNs, or remote regions**.
+
+### **Use Cases:**
+- Connecting **on-premises** infrastructure via **IPSec VPN or FastConnect**.
+- Connecting multiple **VCNs within the same region**.
+- Connecting **remote regions** for cross-region communication.
+
+### **Key Points:**
+- DRG is a **highly available, scalable router**.
+- DRG must be **attached** to the VCN.
+- Used with **VPN, FastConnect, RPC, and LPG**.
+
+---
+
+### **Configuration: DRG**
+#### **Using OCI Console**
+1. **Go to OCI Console** → Navigate to **Networking** → Select **Dynamic Routing Gateways**.
+2. Click **Create DRG** → Provide a **Name** and **Compartment**.
+3. Click **Create DRG**.
+4. **Attach the DRG to a VCN**:
+   - Go to **VCN Attachments** → Click **Attach VCN**.
+   - Select the **VCN and Route Table**.
+5. Update the **VCN Route Table** to direct traffic via the DRG.
+
+#### **Using OCI CLI**
+```sh
+# Create DRG
+oci network drg create --compartment-id <COMPARTMENT_OCID> --display-name "MyDRG"
+
+# Attach DRG to VCN
+oci network drg-attachment create --drg-id <DRG_OCID> --vcn-id <VCN_OCID> --compartment-id <COMPARTMENT_OCID>
+
+# Update Route Table
+oci network route-table update --rt-id <ROUTE_TABLE_OCID> --route-rules '[{"destination": "10.0.0.0/16", "destinationType": "CIDR_BLOCK", "networkEntityId": "<DRG_OCID>"}]'
+```
+
+#### **Using Terraform**
+```hcl
+resource "oci_core_drg" "my_drg" {
+  compartment_id = var.compartment_ocid
+  display_name   = "MyDRG"
+}
+
+resource "oci_core_drg_attachment" "my_drg_attach" {
+  drg_id = oci_core_drg.my_drg.id
+  vcn_id = oci_core_vcn.my_vcn.id
+}
+
+resource "oci_core_route_table" "drg_rt" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.my_vcn.id
+  display_name   = "DRGRouteTable"
+  route_rules {
+    destination = "10.0.0.0/16"
+    network_entity_id = oci_core_drg.my_drg.id
+  }
+}
+```
+
+---
+
+# **5. Local Peering Gateway (LPG)**  
+A **Local Peering Gateway (LPG)** allows **private communication** between two **VCNs in the same region**.
+
+### **Use Cases:**
+- Interconnecting **different departments** in the same OCI region.
+- Allowing multiple VCNs to **share services** like a database or monitoring system.
+
+### **Key Points:**
+- Each **VCN must have a unique CIDR block**.
+- LPG is **only for VCNs in the same region**.
+- Requires **route table updates** to direct traffic via LPG.
+
+---
+
+### **Configuration: LPG**
+#### **Using OCI Console**
+1. **Go to OCI Console** → Navigate to **Networking** → Select **VCN**.
+2. Click **Local Peering Gateways** → **Create Local Peering Gateway**.
+3. Provide a **Name** and select **Compartment**.
+4. Click **Create LPG**.
+5. **Repeat for the second VCN**.
+6. Go to **VCN Peering** → Click **Establish Peering**.
+7. Select **LPG from the second VCN** and confirm the connection.
+8. Update **Route Tables** in both VCNs to use the **LPG**.
+
+#### **Using OCI CLI**
+```sh
+# Create LPG in First VCN
+oci network local-peering-gateway create --compartment-id <COMPARTMENT_OCID> --vcn-id <VCN_1_OCID> --display-name "LPG1"
+
+# Create LPG in Second VCN
+oci network local-peering-gateway create --compartment-id <COMPARTMENT_OCID> --vcn-id <VCN_2_OCID> --display-name "LPG2"
+
+# Establish Peering
+oci network local-peering-gateway connect --local-peering-gateway-id <LPG1_OCID> --peer-id <LPG2_OCID>
+
+# Update Route Table for VCN1
+oci network route-table update --rt-id <ROUTE_TABLE_1_OCID> --route-rules '[{"destination": "10.2.0.0/16", "destinationType": "CIDR_BLOCK", "networkEntityId": "<LPG1_OCID>"}]'
+
+# Update Route Table for VCN2
+oci network route-table update --rt-id <ROUTE_TABLE_2_OCID> --route-rules '[{"destination": "10.1.0.0/16", "destinationType": "CIDR_BLOCK", "networkEntityId": "<LPG2_OCID>"}]'
+```
+
+#### **Using Terraform**
+```hcl
+resource "oci_core_local_peering_gateway" "lpg1" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.vcn1.id
+  display_name   = "LPG1"
+}
+
+resource "oci_core_local_peering_gateway" "lpg2" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.vcn2.id
+  display_name   = "LPG2"
+}
+
+resource "oci_core_route_table" "rt1" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.vcn1.id
+  display_name   = "RouteTable1"
+  route_rules {
+    destination = "10.2.0.0/16"
+    network_entity_id = oci_core_local_peering_gateway.lpg1.id
+  }
+}
+
+resource "oci_core_route_table" "rt2" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.vcn2.id
+  display_name   = "RouteTable2"
+  route_rules {
+    destination = "10.1.0.0/16"
+    network_entity_id = oci_core_local_peering_gateway.lpg2.id
+  }
+}
+```
+
+---
+
+# **6. Remote Peering Connection (RPC)**  
+A **Remote Peering Connection (RPC)** allows **two VCNs in different regions** to communicate privately over **OCI’s backbone network**.
+
+### **Use Cases:**
+- **Multi-region architectures** for disaster recovery.
+- Private connectivity between services hosted in **different OCI regions**.
+
+### **Key Points:**
+- Uses **Dynamic Routing Gateway (DRG)** in each region.
+- The **VCN CIDR blocks must be unique**.
+- Traffic flows through **OCI’s private backbone** (not the internet).
+
+---
+
+### **Configuration: RPC**
+#### **Using OCI Console**
+To establish a remote peering connection between VCNs in different OCI regions, follow these steps:
+
+#### **Step 1: Create a DRG in the First Region**
+1. **Go to the OCI Console** → Navigate to **Networking** → Click **Dynamic Routing Gateways**.
+2. Click **Create Dynamic Routing Gateway**, provide a name, and select the **compartment**.
+3. After creation, **attach it to the VCN**.
+
+#### **Step 2: Create a DRG in the Second Region**
+4. Repeat the **same steps** for the second VCN in a **different region**.
+
+#### **Step 3: Create a Remote Peering Connection (RPC)**
+5. In **each DRG**, navigate to **Remote Peering Connections**.
+6. Click **Create Remote Peering Connection (RPC)**.
+7. Provide a **name** and select the **compartment**.
+8. Copy the **RPC OCID (Oracle Cloud Identifier)** from the first region.
+
+#### **Step 4: Establish Peering**
+9. In the **second DRG**, go to **Remote Peering Connections** and click **Establish Peering**.
+10. Paste the **RPC OCID** from the first region.
+11. The connection will now be established.
+
+#### **Step 5: Configure Route Tables**
+12. In each **VCN’s route table**, add a **route rule** that directs **traffic to the DRG** for communication between the VCNs.
+13. Ensure that **security lists** allow the necessary traffic between both VCNs.
+
+#### **Using OCI CLI**
+```sh
+# Create RPC in Region 1
+oci network remote-peering-connection create --drg-id <DRG1_OCID> --display-name "RPC1"
+
+# Create RPC in Region 2
+oci network remote-peering-connection create --drg-id <DRG2_OCID> --display-name "RPC2"
+
+# Establish Peering
+oci network remote-peering-connection connect --remote-peering-connection-id <RPC1_OCID> --peer-id <RPC2_OCID>
+```
+
+---
+
+# **Final Summary**
+This guide covers **detailed explanations, configurations using Console, OCI CLI, and Terraform** for:
+1. **Internet Gateway (IG)**
+2. **NAT Gateway**
+3. **Service Gateway**
+4. **Dynamic Routing Gateway (DRG)**
+5. **Local Peering Gateway (LPG)**
+6. **Remote Peering Connection (RPC)**
+
+---
+
+## **OCI Gateways**
+| **Gateway** | **Purpose** | **Traffic Direction** | **Common Use Case** |
+|------------|------------|------------------|----------------|
+| **Internet Gateway (IG)** | Connects VCN to the public internet | **Inbound & Outbound** | Exposing web apps, accessing public internet |
+| **NAT Gateway** | Allows private subnet instances to access the internet | **Outbound Only** | Software updates, API calls |
+| **Service Gateway (SG)** | Connects VCN to Oracle services privately | **Outbound Only** | Accessing Object Storage, Autonomous DB |
+| **Dynamic Routing Gateway (DRG)** | Connects VCN to on-premises or other VCNs | **Bidirectional** | Hybrid cloud, multi-region VCN connectivity |
+| **Local Peering Gateway (LPG)** | Connects VCNs within the same region | **Bidirectional** | Private communication between VCNs |
+| **Remote Peering Connection (RPC)** | Connects VCNs across different regions | **Bidirectional** | Multi-region networking, disaster recovery |
+
+---
