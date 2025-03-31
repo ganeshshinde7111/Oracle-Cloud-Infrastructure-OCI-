@@ -23,6 +23,8 @@ OCI Object Storage is an **internet-scale, highly durable storage service** desi
 
 ## **Overview:**  
 OCI Block Volume provides **high-performance, low-latency block storage** for use with Compute instances. It functions like an external hard drive and supports:  
+
+## **Key Features:**  
 ✔ **Dynamic Volume Scaling** – Resize volumes without downtime.  
 ✔ **Multi-Attach Mode** – Attach a volume to multiple instances.  
 ✔ **Encryption & Backups** – Built-in security and automatic snapshots. 
