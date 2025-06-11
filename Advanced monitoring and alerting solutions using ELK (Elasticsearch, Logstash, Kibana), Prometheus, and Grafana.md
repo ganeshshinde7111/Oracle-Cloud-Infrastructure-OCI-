@@ -251,4 +251,3 @@ Define alert rules in `rules.yml`.
 
 ---
 
-Would you like a full **Terraform setup** for provisioning all components on OCI as well?
