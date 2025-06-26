@@ -12,8 +12,8 @@
 6. [Multi-VM Setup Considerations](#6)
 7. [Route Table & Security Rule Design](#7)
 8. [Best Practices](#8)
-9. [Sample Interview Questions & Answers](#9)
-10. [How NAT Gateway Works Internally (Deep Dive)](#10)
+9. [How NAT Gateway Works Internally (Deep Dive)](#9)
+10. [Sample Interview Questions & Answers](#10)
 
 ---
 
