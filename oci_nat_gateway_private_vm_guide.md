@@ -181,7 +181,7 @@ route_rules = [
 
 ---
 
-<a name="10"></a>
+<a name="9"></a>
 ## 9️⃣ How NAT Gateway Works Internally (Deep Dive)
 
 ### 📖 Full Lifecycle of a Packet
@@ -325,7 +325,7 @@ Without NAT Gateway:
 
 ---
 
-<a name="9"></a>
+<a name="10"></a>
 ## 🔟 Sample Interview Questions & Answers
 
 ### 🔸 Q1: How can a VM in a private subnet access the internet in OCI?
