@@ -54,14 +54,14 @@ You have **one or more VMs in a private subnet** in OCI. These VMs have **no pub
                    [ NAT Gateway ]
                            |
                +-----------+------------+
-               |     VCN (10.0.0.0/16)  |
+               |   VCN (10.0.0.0/16)    |
                |                        |
-               | +-------------------+ |
-               | | Private Subnet    | |
-               | | (10.0.1.0/24)     | |
-               | |                   | |
-               | |  VM1, VM2, VM3    | |
-               | +-------------------+ |
+               | +-------------------+  |
+               | | Private Subnet    |  |
+               | | (10.0.1.0/24)     |  |
+               | |                   |  |
+               | |  VM1, VM2, VM3    |  |
+               | +-------------------+  |
                +------------------------+
 ```
 
@@ -242,5 +242,3 @@ OCI’s NAT Gateway is:
 > A receptionist (NAT) forwards letters (requests) from staff (VMs) using a shared address. When replies arrive, the receptionist remembers who sent what and gives the reply to the right person.
 
 ---
-
-**✅ End of Guide — Exported in Markdown**  
