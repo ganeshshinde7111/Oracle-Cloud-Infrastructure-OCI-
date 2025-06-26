@@ -13,7 +13,8 @@
 7. [Route Table & Security Rule Design](#7)
 8. [Best Practices](#8)
 9. [How NAT Gateway Works Internally (Deep Dive)](#9)
-10. [Sample Interview Questions & Answers](#10)
+10. [Can You Use Internet Gateway Instead of NAT Gateway?](#10)
+11. [Sample Interview Questions & Answers](#11)
 
 ---
 
@@ -326,7 +327,93 @@ Without NAT Gateway:
 ---
 
 <a name="10"></a>
-## 🔟 Sample Interview Questions & Answers
+## 🔟 Can We Use an **Internet Gateway** Instead of a **NAT Gateway** for a VM in a Private Subnet?
+
+### 🚫 **Short Answer**: **No**, you cannot **safely** use an **Internet Gateway** for the **same purpose** in this scenario.
+
+---
+
+## ✅ Let’s Understand Why — Deep Explanation
+
+| Aspect                | NAT Gateway                       | Internet Gateway                   |
+| --------------------- | --------------------------------- | ---------------------------------- |
+| **Use Case**          | Egress (outbound) only            | Bidirectional (inbound + outbound) |
+| **IP Requirement**    | Private IP only                   | Requires **Public IP**             |
+| **Security**          | Maintains private nature of VM    | Exposes VM directly to internet    |
+| **Route Target Type** | NAT Gateway                       | Internet Gateway                   |
+| **Typical Use**       | Secure egress for private subnets | Internet access for public subnets |
+
+---
+
+## 🧠 Scenario Breakdown
+
+### 🟢 NAT Gateway
+
+* The VM is in a **private subnet** (no public IP)
+* NAT Gateway allows **only outbound connections**
+* The response comes back **only for existing connections**
+* The VM is **not reachable from the public internet**
+* ✅ **Secure and recommended** for private subnet internet access
+
+---
+
+### 🔴 Internet Gateway
+
+To use an **Internet Gateway**, the VM would need:
+
+1. A **public IP assigned**
+2. A **route to Internet Gateway**
+3. Open **ingress security rules** to receive connections (if needed)
+
+**BUT**:
+
+* Your VM is in a **private subnet**
+* By OCI definition, a private subnet means:
+
+  > **No public IPs are assigned even if you try to** — OCI **blocks the assignment**
+* Even if you manually add a route to Internet Gateway:
+
+  * The **source IP** of the packet remains **private** (e.g., `10.0.1.10`)
+  * Internet **won’t route the return traffic** because private IPs are **not routable on the internet**
+  * Therefore, the connection **fails**
+
+---
+
+## 🔒 Security Implications
+
+| Topic            | NAT Gateway                          | Internet Gateway                  |
+| ---------------- | ------------------------------------ | --------------------------------- |
+| Inbound Traffic  | ❌ Blocked completely                 | ✅ Allowed (must manage via rules) |
+| Outbound Traffic | ✅ Allowed for existing sessions only | ✅ Allowed (if public IP assigned) |
+| VM Exposure      | 🔒 VM stays private                  | 🔓 VM is publicly reachable       |
+
+---
+
+## 📌 Summary: Why NAT and Not Internet Gateway?
+
+| Question                                                                             | Answer                                                                                                                              |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Can you replace NAT Gateway with Internet Gateway for a private subnet?**          | ❌ No — because Internet Gateway requires public IPs and private subnets block those.                                                |
+| **What will happen if you try?**                                                     | Traffic will **not reach the internet**. Return packets are dropped — because private IPs are **not valid on the public internet**. |
+| **Is NAT Gateway the best practice for outbound-only traffic from private subnets?** | ✅ Yes. It is **designed for that purpose**, keeps your VM secure, and works without public IPs.                                     |
+
+---
+
+## 🔁 Alternative: When to Use Internet Gateway
+
+| Use Case                                       | Use Internet Gateway?                        |
+| ---------------------------------------------- | -------------------------------------------- |
+| Public web server (e.g., nginx with public IP) | ✅ Yes                                        |
+| Bastion Host (SSH access from internet)        | ✅ Yes                                        |
+| Outbound-only traffic from private subnet      | ❌ No — use NAT Gateway instead               |
+| High-trust internal access only                | ❌ No — use service gateway / private peering |
+
+---
+
+
+<a name="11"></a>
+
+## 1️⃣1️⃣ Sample Interview Questions & Answers
 
 ### 🔸 Q1: How can a VM in a private subnet access the internet in OCI?
 
