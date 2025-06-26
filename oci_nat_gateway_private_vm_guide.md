@@ -448,3 +448,84 @@ To use an **Internet Gateway**, the VM would need:
 **A:** When accessing OCI-native services like Object Storage, use **Service Gateway** to keep traffic inside OCI backbone without going over public internet.
 
 ---
+
+
+---
+
+<a name="12"></a>
+## 🔄 Bonus: let’s clarify when and **why Route Table (RT) and Security List (SL)/NSG rules are required** for **each VM**, especially in a **private subnet with NAT Gateway**.
+
+---
+
+## 🧩 Scenario Recap
+
+You have **multiple VMs in a private subnet** that need to:
+
+* Access the **internet for outbound connections** (e.g., software updates)
+* **Communicate with each other** internally (east-west traffic)
+* Be **invisible from the public internet**
+
+---
+
+## 🛣️ 1. **Route Table Configuration – Per Subnet (Not Per VM)**
+
+* **Route Tables** are **associated with a subnet**, not with individual VMs.
+* So: **You do not need to define a separate route for each VM.**
+
+### ✅ What you must do:
+
+* Attach a Route Table to the **private subnet**
+* It should have a route like:
+
+  ```hcl
+  Destination CIDR: 0.0.0.0/0
+  Target: NAT Gateway OCID
+  ```
+
+This means: **All VMs in that subnet** can use the NAT Gateway for outbound internet access.
+
+---
+
+## 🛡️ 2. **Security Lists or NSG Rules – Controls Per VM's Traffic**
+
+* These are **essential to allow or deny traffic to/from each VM**
+* You can use either:
+
+  * **Security Lists** (applied at the subnet level, coarsely)
+  * **Network Security Groups (NSGs)** (applied at the VNIC level, fine-grained)
+
+### ✅ What must be allowed:
+
+#### For Internet-bound Outbound Access via NAT Gateway:
+
+| Direction  | Protocol | Source/Destination | Rule Purpose               |
+| ---------- | -------- | ------------------ | -------------------------- |
+| **Egress** | TCP/All  | `0.0.0.0/0`        | Allow outbound to internet |
+
+#### For VM-to-VM (intra-subnet) communication:
+
+| Direction   | Protocol | Source/Destination | Rule Purpose                  |
+| ----------- | -------- | ------------------ | ----------------------------- |
+| **Ingress** | TCP/All  | `<subnet CIDR>`    | Allow incoming from other VMs |
+| **Egress**  | TCP/All  | `<subnet CIDR>`    | Allow outgoing to other VMs   |
+
+---
+
+## ✅ Summary: Do You Need RT + SL/NSG Rules for All VMs?
+
+| Component        | Required Per VM?          | Reason                     |
+| ---------------- | ------------------------- | -------------------------- |
+| **Route Table**  | ❌ No                      | Shared per subnet          |
+| **SL/NSG Rules** | ✅ Yes (via subnet or NSG) | Controls each VM's traffic |
+
+---
+
+## 🧠 Best Practice Tip
+
+* Use **Network Security Groups (NSGs)** instead of only Security Lists for **better control** when:
+
+  * Different VMs in the same subnet need different access levels
+  * You want to logically group workloads (e.g., web-tier, app-tier)
+
+---
+
