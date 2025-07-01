@@ -1,4 +1,4 @@
-# **detailed, clean, technical breakdown of server structure and its key components** (including kernel, init system, libraries, hardware interaction) for your **deep OCI patching and system engineering understanding**:
+# **Detailed, clean, technical breakdown of server structure and its key components** (including kernel, init system, libraries, hardware interaction) for your **deep OCI patching and system engineering understanding**:
 
 ---
 
