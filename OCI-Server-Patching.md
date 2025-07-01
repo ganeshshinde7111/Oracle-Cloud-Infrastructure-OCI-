@@ -211,7 +211,7 @@ These interact with:
 
 ---
 
-# **a clear, deep technical, practical, and architectural-level explanation** on **patching servers on OCI** (or any Linux server), **why each step is needed**, and **what happens in the backend during patching and reboot**.
+# **A clear, deep technical, practical, and architectural-level explanation** on **patching servers on OCI** (or any Linux server), **why each step is needed**, and **what happens in the backend during patching and reboot**.
 
 ---
 
@@ -672,7 +672,7 @@ oci os-management scheduled-job create \
 
 ---
 
-✅ **The Terraform module for automating OCI OS Management resources creation.**
+# ✅ **The Terraform module for automating OCI OS Management resources creation.**
 
 It includes:
 
@@ -800,7 +800,7 @@ resource "oci_os_management_scheduled_job" "patch_job" {
 ```
 ---
 
-✅ **Shell scripts for pre-checks and post-checks before and after patching.**
+# ✅ **Shell scripts for pre-checks and post-checks before and after patching.**
 
 They:
 
